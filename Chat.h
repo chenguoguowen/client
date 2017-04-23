@@ -31,5 +31,10 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnClose();
 	CEdit m_receiveCtrl;
+	CEdit m_editControl;
 	afx_msg void OnBnClickedSendfile();
+	afx_msg void OnBnClickedButton2();
+
+	
+	afx_msg void OnBnClickedButton4();
 };

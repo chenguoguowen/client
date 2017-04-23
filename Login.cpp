@@ -18,7 +18,7 @@ CLogin::CLogin(CWnd* pParent /*=NULL*/)
 {
 	theApp.log = this;
 	tcp_tag = 0;
-	GetPath(sPath, L"\\res\\remember.txt");   //记录之前打开过的文件
+	GetPath(sPath, L"\\res\\remember.txt");   //记录之前打开过的账号
 	Read();
 }
 
@@ -237,6 +237,12 @@ BOOL CLogin::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	for(int i=0;i!=vec.size();i++)
 		m_remember.AddString((CString)vec[i].c_str());
+
+	HICON m_hIcon;
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);//IDR_ICON为图标资源名
+	SetIcon(m_hIcon, TRUE); // Set big icon
+	SetIcon(m_hIcon, FALSE); // Set small icon
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }

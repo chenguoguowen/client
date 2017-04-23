@@ -48,7 +48,7 @@ void CTcpSocket::OnReceive(int nErrorCode)
 	case 5:
 		theApp.m_userID = Msg.usermsg.ID;
 
-		temp += (CString)"¹§Ï²Äú×¢²á³É¹¦£¬ÕËºÅÊÇ£º" + theApp.m_userID + (CString)"£¬ÇëÀÎ¼Ç£¡";
+		temp += L"¹§Ï²Äú×¢²á³É¹¦£¬ÕËºÅÊÇ£º" + theApp.m_userID + L"£¬ÇëÀÎ¼Ç£¡";
 
 		theApp.log->m_userID = Msg.usermsg.ID;
 
@@ -59,8 +59,7 @@ void CTcpSocket::OnReceive(int nErrorCode)
 		break;
 
 	case 6://ÎÄ¼þ´«Êä
-		
-			ReceiveFile();
+		ReceiveFile();
 	
 		break;
 	default:
@@ -73,11 +72,27 @@ void CTcpSocket::OnReceive(int nErrorCode)
 void CTcpSocket::ReceiveFile()
 {
 
+	CString fileName;
+
 	SOCKET_STREAM_FILE_INFO StreamFileInfo;
 
 	theApp.m_tcp->Receive(&StreamFileInfo, sizeof(SOCKET_STREAM_FILE_INFO));
 
-	CFile destFile(StreamFileInfo.szFileTitle, CFile::modeCreate | CFile::modeWrite | CFile::typeBinary);
+
+	CFileDialog saveDlg(false, NULL, StreamFileInfo.szFileTitle, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, NULL, NULL, 0);
+	
+	if (saveDlg.DoModal() == IDOK)
+	{
+		fileName = saveDlg.GetPathName();
+	}
+	else
+	{
+		//closesocket(sock);
+		return;
+	}
+	//recvFileBuf[SIZEFILE]={0};
+	CFile destFile(fileName, CFile::modeCreate | CFile::modeWrite | CFile::typeBinary);
+	//CFile destFile(StreamFileInfo.szFileTitle, CFile::modeCreate | CFile::modeWrite | CFile::typeBinary);
 
 	UINT dwRead = 0;
 	while (dwRead<StreamFileInfo.nFileSizeLow)

@@ -37,6 +37,7 @@ typedef struct _SOCKET_STREAM_FILE_INFO {
 class CClientApp : public CWinApp
 {
 public:
+	CFont m_font;  //×ÖÌå
 	CClientApp();
 	CHead head;
 	CClientDlg *active;

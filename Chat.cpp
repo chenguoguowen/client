@@ -5,6 +5,7 @@
 #include "Client.h"
 #include "Chat.h"
 #include "afxdialogex.h"
+#include "MsgRecode.h"
 
 
 // CChat 对话框
@@ -29,6 +30,10 @@ void CChat::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_RECEIVEMSG, m_receiveMsg);
 	DDX_Text(pDX, IDC_SENDMSG, m_sendMsg);
 	DDX_Control(pDX, IDC_RECEIVEMSG, m_receiveCtrl);
+
+	/*DDX_Control(pDX, IDC_RECEIVEMSG, m_richEditCtrl);
+	DDX_Control(pDX, IDC_SENDMSG, m_sendRichEditCtrl);*/
+	DDX_Control(pDX, IDC_SENDMSG, m_editControl);
 }
 
 
@@ -37,6 +42,8 @@ BEGIN_MESSAGE_MAP(CChat, CDialogEx)
 	ON_BN_CLICKED(IDC_CANCEL, &CChat::OnBnClickedCancel)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_SendFile, &CChat::OnBnClickedSendfile)
+	ON_BN_CLICKED(IDC_BUTTON2, &CChat::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON4, &CChat::OnBnClickedButton4)
 END_MESSAGE_MAP()
 
 
@@ -110,6 +117,20 @@ BOOL CChat::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_caption =(CString)"正与【" +  m_toID + (CString)"】 " + m_name + (CString)" 聊天中";
 	SetWindowTextW(m_caption);//设置对话框标题
+
+	HICON m_hIcon;
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);//IDR_ICON为图标资源名
+	SetIcon(m_hIcon, TRUE); // Set big icon
+	SetIcon(m_hIcon, FALSE); // Set small icon
+	
+	if(theApp.m_font.m_hObject)
+	{
+		// 获取编辑框IDC_FONT_EDIT的CWnd指针，并设置其字体   
+		GetDlgItem(IDC_SENDMSG)->SetFont(&theApp.m_font);
+		GetDlgItem(IDC_RECEIVEMSG)->SetFont(&theApp.m_font);
+	}
+	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
@@ -214,4 +235,83 @@ void CChat::OnBnClickedSendfile()
 
 	//sockRecv.Close();
 	AfxMessageBox(L"发送完毕！");
+}
+
+
+void CChat::OnBnClickedButton2()  //字体设置
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString strFontName;    // 字体名称   
+
+	LOGFONT lf;             // LOGFONT变量   
+
+							// 将lf所有字节清零   
+	memset(&lf, 0, sizeof(LOGFONT));
+
+	// 将lf中的元素字体名设为“宋体”   
+	_tcscpy_s(lf.lfFaceName, LF_FACESIZE, _T("宋体"));
+
+	// 构造字体对话框，初始选择字体名为“宋体”   
+	CFontDialog fontDlg(&lf);
+
+	if (IDOK == fontDlg.DoModal())     // 显示字体对话框   
+	{
+		// 如果m_font已经关联了一个字体资源对象，则释放它   
+		if (theApp.m_font.m_hObject)
+		{
+			theApp.m_font.DeleteObject();
+		}
+		// 使用选定字体的LOGFONT创建新的字体   
+		theApp.m_font.CreateFontIndirect(fontDlg.m_cf.lpLogFont);
+	    
+		// 获取编辑框IDC_FONT_EDIT的CWnd指针，并设置其字体   
+		GetDlgItem(IDC_SENDMSG)->SetFont(&theApp.m_font);
+		GetDlgItem(IDC_RECEIVEMSG)->SetFont(&theApp.m_font);
+
+		
+	}
+
+	//CFont * f;
+	//CFontDialog font;
+	//if (IDOK == font.DoModal())
+	//{
+
+	//	f = new CFont;
+	//	f->CreateFont(16,            // nHeight 
+	//		0,           // nWidth 
+	//		0,           // nEscapement 
+	//		0,           // nOrientation 
+	//		FW_BOLD,     // nWeight 
+	//		TRUE,        // bItalic 
+	//		FALSE,       // bUnderline 
+	//		0,           // cStrikeOut 
+	//		ANSI_CHARSET,              // nCharSet 
+	//		OUT_DEFAULT_PRECIS,        // nOutPrecision 
+	//		CLIP_DEFAULT_PRECIS,       // nClipPrecision 
+	//		DEFAULT_QUALITY,           // nQuality 
+	//		DEFAULT_PITCH | FF_SWISS, // nPitchAndFamily 
+	//		_T("Arial"));              // lpszFac
+
+	//	m_editControl.SetFont(f);
+	//	m_receiveCtrl.SetFont(f);
+	//	Invalidate();
+	//}
+
+}
+
+
+
+
+void CChat::OnBnClickedButton4()
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	CMsgRecode* MsgRecode = new CMsgRecode; 
+
+	UpdateData(true);
+	MsgRecode->m_MsgRecode = theApp.m_MsgRecode[m_toID];
+	UpdateData(false);
+
+	MsgRecode->Create(IDD_CHAT, this);
+	MsgRecode->ShowWindow(SW_SHOW);
 }

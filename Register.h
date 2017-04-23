@@ -23,4 +23,5 @@ public:
 	CString mima;
 	CString mima2;
 	afx_msg void OnBnClickedOk();
+	virtual BOOL OnInitDialog();
 };

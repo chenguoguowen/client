@@ -27,10 +27,12 @@ public:
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
 	CComboBox m_remember;
-	CString sPath;
+	
 	vector<string> vec;
-	void GetPath(CString &sPath,CString filename);
+	
 	virtual BOOL OnInitDialog();
 	void Read();
 	void Write();
+	CString sPath;
+	void GetPath(CString &sPath, CString filename);
 };

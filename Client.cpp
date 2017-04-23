@@ -70,7 +70,7 @@ BOOL CClientApp::InitInstance()
 	// 更改用于存储设置的注册表项
 	// TODO: 应适当修改该字符串，
 	// 例如修改为公司或组织名
-	SetRegistryKey(L"课程设计");
+	SetRegistryKey(L"毕业设计");
 
 	srand((unsigned)time(0));
 	m_tcp = NULL;

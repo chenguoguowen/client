@@ -50,6 +50,7 @@ END_MESSAGE_MAP()
 
 CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CClientDlg::IDD, pParent)
+	, m_StateStr(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	theApp.active = this;
@@ -61,6 +62,9 @@ void CClientDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_listcontrol);
+	DDX_Text(pDX, IDC_EDIT1, m_StateStr);
+	DDX_Control(pDX, IDC_COMBO1, m_comboxBox);
+	DDX_Control(pDX, IDC_Picture, m_Picture);
 }
 
 BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
@@ -70,6 +74,9 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_WM_CLOSE()
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST1, &CClientDlg::OnNMDblclkList1)
 	ON_BN_CLICKED(IDC_QUIT, &CClientDlg::OnBnClickedQuit)
+	ON_CBN_SELCHANGE(IDC_COMBO1, &CClientDlg::OnCbnSelchangeCombo1)
+	ON_BN_CLICKED(IDC_BUTTON1, &CClientDlg::OnBnClickedButton1)
+	ON_MESSAGE(WM_SHOWTASK, OnShowTask)
 END_MESSAGE_MAP()
 
 
@@ -116,8 +123,21 @@ BOOL CClientDlg::OnInitDialog()
 	m_listcontrol.InsertColumn(2, L"êÇ³Æ", LVCFMT_CENTER, rect.Width()*3/10, 1);
 	m_listcontrol.InsertColumn(3, L"ÓÃ»§IP", LVCFMT_CENTER, rect.Width()*4/10, 1);
 	m_listcontrol.DeleteColumn(0);
-	m_caption = (CString)"(" + theApp.m_userID + (CString)") " + theApp.m_userNAME + (CString)"µÄClient";
+	m_caption = (CString)"(" + theApp.m_userID + (CString)") " + theApp.m_userNAME;
+	UpdateData(true);
+	m_StateStr = L"ÔÚÏß";
+
+
+	for (int i = 1; i < 84; i++)
+	{
+		CString tmp;
+		tmp.Format(_T("%d"), i);
+		m_comboxBox.AddString(tmp);
+	}
+	UpdateData(false);
 	SetWindowTextW(m_caption);
+
+	
 	return TRUE;  // ³ý·Ç½«½¹µãÉèÖÃµ½¿Ø¼þ£¬·ñÔò·µ»Ø TRUE
 }
 
@@ -171,12 +191,6 @@ HCURSOR CClientDlg::OnQueryDragIcon()
 }
 
 
-void CClientDlg::OnClose()
-{
-	// TODO: ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌÐò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
-	return;
-	CDialogEx::OnClose();
-}
 
 
 void CClientDlg::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)//Ë«»÷ÁÐ±íÊÓÍ¼¿Ø¼þÊÂ¼þÏìÓ¦³ÌÐò
@@ -242,7 +256,105 @@ void CClientDlg::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)//Ë«»÷ÁÐ±íÊÓÍ¼¿
 void CClientDlg::OnBnClickedQuit()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
-	MessageBox(L"ÍË³öºóÏûÏ¢¼ÇÂ¼Çå¿Õ£¡£¡",L"ÌáÊ¾",MB_OK);
-
-	exit(0);
+	UINT a = MessageBox(L"ÍË³öºóÏûÏ¢¼ÇÂ¼Çå¿Õ£¡£¡", L"ÌáÊ¾", MB_YESNO);
+	
+	if (a == 6)
+	{
+		exit(0);
+	}
 }
+
+void CClientDlg::OnClose()
+{
+	// TODO: ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌÐò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
+	UINT a = MessageBox(L"ÍË³öºóÏûÏ¢¼ÇÂ¼Çå¿Õ£¡£¡", L"ÌáÊ¾", MB_YESNO);
+
+	if (a == 6)
+	{
+		CDialogEx::OnClose();
+	}
+}
+
+
+void CClientDlg::OnCbnSelchangeCombo1()
+{
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
+	UpdateData(true);
+	int nIndex = m_comboxBox.GetCurSel();
+
+	CString strCBText;
+
+	m_comboxBox.GetLBText(nIndex, strCBText);
+
+	int a = _ttoi(strCBText);
+
+	CBitmap bitmap;  // CBitmap¶ÔÏó£¬ÓÃÓÚ¼ÓÔØÎ»Í¼   
+	HBITMAP hBmp;    // ±£´æCBitmap¼ÓÔØµÄÎ»Í¼µÄ¾ä±ú   
+
+	bitmap.LoadBitmap(134+a);  // ½«Î»Í¼IDB_BITMAP1¼ÓÔØµ½bitmap   
+	hBmp = (HBITMAP)bitmap.GetSafeHandle();  // »ñÈ¡bitmap¼ÓÔØÎ»Í¼µÄ¾ä±ú   
+	m_Picture.SetBitmap(hBmp);    // ÉèÖÃÍ¼Æ¬¿Ø¼þm_jzmPictureµÄÎ»Í¼Í¼Æ¬ÎªIDB_BITMAP1   
+
+	UpdateData(false);
+}
+
+
+void CClientDlg::OnBnClickedButton1()
+{
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼þÍ¨Öª´¦Àí³ÌÐò´úÂë
+
+	NOTIFYICONDATA nid;
+	nid.cbSize = (DWORD)sizeof(NOTIFYICONDATA);
+	nid.hWnd = this->m_hWnd; nid.uID = IDR_MAINFRAME;
+	nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+	nid.uCallbackMessage = WM_SHOWTASK;//×Ô¶¨ÒåµÄÏûÏ¢Ãû³Æ
+	nid.hIcon = LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME));
+	memcpy(nid.szTip, L"³ÌÐòÃû³Æ", 10); //ÐÅÏ¢ÌáÊ¾Ìõ
+	Shell_NotifyIcon(NIM_ADD, &nid); //ÔÚÍÐÅÌÇøÌí¼ÓÍ¼±ê
+	ShowWindow(SW_HIDE); //Òþ²ØÖ÷´°¿Ú
+}
+
+LRESULT CClientDlg::OnShowTask(WPARAM wParam, LPARAM lParam)
+{
+	if (wParam != IDR_MAINFRAME)
+		return 1;
+	switch (lParam)
+	{
+	case WM_RBUTTONUP://ÓÒ¼üÆðÀ´Ê±µ¯³ö¿ì½Ý²Ëµ¥£¬ÕâÀïÖ»ÓÐÒ»¸ö¡°¹Ø±Õ¡±
+	{ 
+		LPPOINT lpoint = new tagPOINT;
+	    ::GetCursorPos(lpoint);//µÃµ½Êó±êÎ»ÖÃ
+	     CMenu menu;
+	    menu.CreatePopupMenu();//ÉùÃ÷Ò»¸öµ¯³öÊ½²Ëµ¥
+						   //Ôö¼Ó²Ëµ¥Ïî¡°¹Ø±Õ¡±£¬µã»÷Ôò·¢ËÍÏûÏ¢WM_DESTROY¸øÖ÷´°¿Ú½«³ÌÐò½áÊø¡£
+	    menu.AppendMenu(MF_STRING, WM_DESTROY, L"¹Ø±Õ"); //È·¶¨µ¯³öÊ½²Ëµ¥µÄÎ»ÖÃ
+	    menu.TrackPopupMenu(TPM_LEFTALIGN, lpoint->x, lpoint->y, this); //×ÊÔ´»ØÊÕ
+	    HMENU hmenu = menu.Detach();
+	    menu.DestroyMenu();
+	    delete lpoint;
+	} 
+	break;
+	case WM_LBUTTONDBLCLK://Ë«»÷×ó¼üµÄ´¦Àí
+	{ 
+		this->ShowWindow(SW_SHOW);//ÏÔÊ¾Ö÷´°¿Ú
+	    //DeleteTray();
+	} 
+	break;
+	default:
+		break;
+	}
+	return 0;
+}
+
+//void CClientDlg::DeleteTray()
+//{
+//	NOTIFYICONDATA nid;
+//	nid.cbSize = (DWORD)sizeof(NOTIFYICONDATA);
+//	nid.hWnd = this->m_hWnd;
+//	nid.uID = IDR_MAINFRAME;
+//	nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+//	nid.uCallbackMessage = WM_SHOWTASK;//×Ô¶¨ÒåµÄÏûÏ¢Ãû³Æ
+//	nid.hIcon = LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME));
+//	strcpy(nid.szTip, "³ÌÐòÃû³Æ"); //ÐÅÏ¢ÌáÊ¾ÌõÎª¡°¼Æ»®ÈÎÎñÌáÐÑ¡±
+//	Shell_NotifyIcon(NIM_DELETE, &nid); //ÔÚÍÐÅÌÇøÉ¾³ýÍ¼±ê
+//}
