@@ -1,4 +1,6 @@
 #pragma once
+#include "ATLComTime.h"
+#include "afxdtctl.h"
 
 
 // CMsgRecode ¶Ô»°¿ò
@@ -22,8 +24,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CString m_MsgRecode;
+	CString toID;
 	CString sPath;
 	void ReadRecode();
 	void WriteRecode();	
 	void GetPathRecode(CString &sPath, CString filename);
+	afx_msg void OnBnClickedOk();
+
+	CDateTimeCtrl m_DateTime;
 };

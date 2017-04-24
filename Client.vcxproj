@@ -223,7 +223,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties RESOURCE_FILE="Client.rc" />
+      <UserProperties RESOURCE_FILE="Client.rc"  />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

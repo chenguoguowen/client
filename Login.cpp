@@ -43,7 +43,20 @@ BEGIN_MESSAGE_MAP(CLogin, CDialogEx)
 END_MESSAGE_MAP()
 
 
+
 // CLogin 消息处理程序
+void CLogin::GetPath(CString &sPath, CString filename)
+{
+	GetModuleFileName(NULL, sPath.GetBufferSetLength(MAX_PATH + 1), MAX_PATH);//返回该当前应用程序*.exe的全路径
+	sPath.ReleaseBuffer();
+	int nPos;
+	nPos = sPath.ReverseFind('\\');//ReverseFind()在一个较大的字符串中从末端开始查找某个字符
+	sPath = sPath.Left(nPos);
+	nPos = sPath.ReverseFind('\\');
+	sPath = sPath.Left(nPos);
+	sPath += filename;
+}
+
 
 void CLogin::Read()
 {
@@ -218,17 +231,7 @@ void CLogin::OnBnClickedButton3()  //注册按钮
 	theApp.m_tcp->Send(&temp,sizeof(temp));
 }
 
-void CLogin::GetPath(CString &sPath,CString filename)
-{
-	GetModuleFileName(NULL,sPath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);//返回该当前应用程序*.exe的全路径
-	sPath.ReleaseBuffer();
-	int nPos;
-	nPos=sPath.ReverseFind ('\\');//ReverseFind()在一个较大的字符串中从末端开始查找某个字符
-	sPath=sPath.Left(nPos);
-	nPos=sPath.ReverseFind ('\\');
-	sPath=sPath.Left(nPos);
-	sPath+=filename;
-}
+
 
 BOOL CLogin::OnInitDialog()
 {

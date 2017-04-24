@@ -44,6 +44,7 @@ BEGIN_MESSAGE_MAP(CChat, CDialogEx)
 	ON_BN_CLICKED(IDC_SendFile, &CChat::OnBnClickedSendfile)
 	ON_BN_CLICKED(IDC_BUTTON2, &CChat::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON4, &CChat::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON3, &CChat::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -267,7 +268,6 @@ void CChat::OnBnClickedButton2()  //字体设置
 		// 获取编辑框IDC_FONT_EDIT的CWnd指针，并设置其字体   
 		GetDlgItem(IDC_SENDMSG)->SetFont(&theApp.m_font);
 		GetDlgItem(IDC_RECEIVEMSG)->SetFont(&theApp.m_font);
-
 		
 	}
 
@@ -302,7 +302,7 @@ void CChat::OnBnClickedButton2()  //字体设置
 
 
 
-void CChat::OnBnClickedButton4()
+void CChat::OnBnClickedButton4()   //查看聊天记录
 {
 	// TODO: 在此添加控件通知处理程序代码
 
@@ -310,8 +310,45 @@ void CChat::OnBnClickedButton4()
 
 	UpdateData(true);
 	MsgRecode->m_MsgRecode = theApp.m_MsgRecode[m_toID];
+	MsgRecode->toID = m_toID;
 	UpdateData(false);
 
-	MsgRecode->Create(IDD_CHAT, this);
+	MsgRecode->Create(IDD_MessageRecode, this);
 	MsgRecode->ShowWindow(SW_SHOW);
+}
+
+
+void CChat::OnBnClickedButton3()  //保存聊天记录
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CTime time;
+	CString sPath;
+	time = CTime::GetCurrentTime();  //获取现在时间
+	CString strTime = time.Format(L"%Y-%m-%d");
+
+	GetModuleFileName(NULL, sPath.GetBufferSetLength(MAX_PATH + 1), MAX_PATH);//返回该当前应用程序*.exe的全路径
+	sPath.ReleaseBuffer();
+	int nPos;
+	nPos = sPath.ReverseFind('\\');//ReverseFind()在一个较大的字符串中从末端开始查找某个字符
+	sPath = sPath.Left(nPos);
+	sPath += L"\\" + strTime +"-"+ m_toID + L".txt";
+
+	CFile file;
+	if (!PathFileExists(sPath))
+	{
+		file.Open(sPath, CFile::modeCreate|CFile::modeWrite);
+		file.Close();
+	}
+
+	
+	fstream out(sPath, fstream::out);
+	if (out)
+	{		
+		CString b = theApp.m_MsgRecode[m_toID];
+		string a = CT2A(b);
+	
+		out << a;
+	}	
+
+	out.close(); 
 }

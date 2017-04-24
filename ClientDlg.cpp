@@ -256,7 +256,7 @@ void CClientDlg::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)//Ë«»÷ÁĞ±íÊÓÍ¼¿
 void CClientDlg::OnBnClickedQuit()
 {
 	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
-	UINT a = MessageBox(L"ÍË³öºóÏûÏ¢¼ÇÂ¼Çå¿Õ£¡£¡", L"ÌáÊ¾", MB_YESNO);
+	UINT a = MessageBox(L"ÍË³ö??", L"ÌáÊ¾", MB_YESNO);
 	
 	if (a == 6)
 	{
@@ -267,7 +267,7 @@ void CClientDlg::OnBnClickedQuit()
 void CClientDlg::OnClose()
 {
 	// TODO: ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
-	UINT a = MessageBox(L"ÍË³öºóÏûÏ¢¼ÇÂ¼Çå¿Õ£¡£¡", L"ÌáÊ¾", MB_YESNO);
+	UINT a = MessageBox(L"ÍË³ö??", L"ÌáÊ¾", MB_YESNO);
 
 	if (a == 6)
 	{
