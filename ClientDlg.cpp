@@ -125,6 +125,7 @@ BOOL CClientDlg::OnInitDialog()
 	m_listcontrol.DeleteColumn(0);
 	m_caption = (CString)"(" + theApp.m_userID + (CString)") " + theApp.m_userNAME;
 	UpdateData(true);
+
 	m_StateStr = L"在线";
 
 
@@ -291,9 +292,9 @@ void CClientDlg::OnCbnSelchangeCombo1()
 	CBitmap bitmap;  // CBitmap对象，用于加载位图   
 	HBITMAP hBmp;    // 保存CBitmap加载的位图的句柄   
 
-	bitmap.LoadBitmap(134+a);  // 将位图IDB_BITMAP1加载到bitmap   
+	bitmap.LoadBitmap(134+a);  // 将位图加载到bitmap   
 	hBmp = (HBITMAP)bitmap.GetSafeHandle();  // 获取bitmap加载位图的句柄   
-	m_Picture.SetBitmap(hBmp);    // 设置图片控件m_jzmPicture的位图图片为IDB_BITMAP1   
+	m_Picture.SetBitmap(hBmp);    // 设置图片控件的位图图片为IDB_BITMAP1   
 
 	UpdateData(false);
 }

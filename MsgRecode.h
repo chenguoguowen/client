@@ -1,6 +1,7 @@
 #pragma once
 #include "ATLComTime.h"
 #include "afxdtctl.h"
+#include "afxwin.h"
 
 
 // CMsgRecode 对话框
@@ -32,4 +33,8 @@ public:
 	afx_msg void OnBnClickedOk();
 
 	CDateTimeCtrl m_DateTime;
+
+	// 控制显示在最后一行
+	CEdit m_LineCtl;
+
 };

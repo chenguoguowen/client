@@ -33,6 +33,7 @@ void CMsgRecode::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1, m_MsgRecode);
 	//  DDX_DateTimeCtrl(pDX, IDC_DATETIMEPICKER1, m_DateTime);
 	DDX_Control(pDX, IDC_DATETIMEPICKER1, m_DateTime);
+	DDX_Control(pDX, IDC_EDIT1, m_LineCtl);
 }
 
 
@@ -110,6 +111,8 @@ void CMsgRecode::OnBnClickedOk()
 				infile.getline(temp,255);
 				m_MsgRecode += temp;
 				m_MsgRecode += L"\n";
+				m_LineCtl.LineScroll(m_LineCtl.GetLineCount() - 1);
+
 			}
 		}
 		infile.close();
@@ -121,3 +124,5 @@ void CMsgRecode::OnBnClickedOk()
 	}
 	UpdateData(false);
 }
+
+

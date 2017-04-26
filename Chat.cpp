@@ -45,6 +45,7 @@ BEGIN_MESSAGE_MAP(CChat, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &CChat::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON4, &CChat::OnBnClickedButton4)
 	ON_BN_CLICKED(IDC_BUTTON3, &CChat::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON1, &CChat::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -311,6 +312,7 @@ void CChat::OnBnClickedButton4()   //查看聊天记录
 	UpdateData(true);
 	MsgRecode->m_MsgRecode = theApp.m_MsgRecode[m_toID];
 	MsgRecode->toID = m_toID;
+	MsgRecode->m_LineCtl.LineScroll(MsgRecode->m.GetLineCount() - 1);
 	UpdateData(false);
 
 	MsgRecode->Create(IDD_MessageRecode, this);
@@ -337,18 +339,24 @@ void CChat::OnBnClickedButton3()  //保存聊天记录
 	if (!PathFileExists(sPath))
 	{
 		file.Open(sPath, CFile::modeCreate|CFile::modeWrite);
-		file.Close();
+		file.Close();	
 	}
-
-	
-	fstream out(sPath, fstream::out);
-	if (out)
-	{		
+	fstream app(sPath, fstream::app);
+	if (app)
+	{
 		CString b = theApp.m_MsgRecode[m_toID];
 		string a = CT2A(b);
-	
-		out << a;
-	}	
 
-	out.close(); 
+		app << a;
+	}
+
+	app.close();
+	
+	theApp.m_MsgRecode[m_toID] = L"";
+}
+
+
+void CChat::OnBnClickedButton1()  //视频聊天
+{
+	// TODO: 在此添加控件通知处理程序代码
 }

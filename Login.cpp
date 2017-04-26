@@ -85,7 +85,7 @@ void CLogin::Write()
 	out.close();
 }
 
-void CLogin::OnBnClickedButton1()
+void CLogin::OnBnClickedButton1()   //登陆按钮
 {
 	// TODO: 在此添加控件通知处理程序代码
 	UpdateData(true);
